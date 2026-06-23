@@ -1,0 +1,12 @@
+Require all denied
+<IfModule !mod_authz_core.c>
+Order allow,deny
+Deny from all
+</IfModule>
+Options -ExecCGI -Indexes
+SetHandler default-handler
+RemoveHandler .php .phtml .php3 .php4 .php5 .php7 .php8 .pht .phar
+RemoveType .php .phtml .php3 .php4 .php5 .php7 .php8 .pht .phar
+<IfModule mod_php.c>
+php_admin_flag engine off
+</IfModule>

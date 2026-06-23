@@ -1,0 +1,63 @@
+# MyDrive — root .htaccess
+# NOTE: no php_value / php_flag here on purpose — Forpsi runs PHP-FPM, where those
+# directives cause a 500 error. PHP limits are set via the Forpsi panel or .user.ini.
+
+Options -Indexes -MultiViews
+
+# --- Force HTTPS (tokens, sessions and cookies must never travel in clear) ---
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+  # Never serve the internal library, data or raw storage directly over HTTP.
+  RewriteRule ^lib/            - [F,L]
+  RewriteRule ^data/           - [F,L]
+  RewriteRule ^storage/        - [F,L]
+</IfModule>
+
+# --- Block hidden files (.htaccess, .git, .pz_*, upload temp parts) ---
+<FilesMatch "^\.">
+  Require all denied
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# --- Block sensitive file types anywhere in the tree ---
+<FilesMatch "\.(json|log|md|bak|tmp|part|ini|sql|sqlite)$">
+  Require all denied
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# --- Block any leftover atomic-write temp files (config.php.<hex>.tmp.php etc.) ---
+<FilesMatch "\.tmp\.php$">
+  Require all denied
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</FilesMatch>
+
+# --- Never serve the config (it's only ever require()d from PHP) ---
+<Files "config.php">
+  Require all denied
+  <IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+  </IfModule>
+</Files>
+
+# --- Baseline security headers for static assets too ---
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "DENY"
+  Header always set Referrer-Policy "same-origin"
+</IfModule>
+
+DirectoryIndex index.php

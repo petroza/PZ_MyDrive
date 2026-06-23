@@ -1,0 +1,18 @@
+# --- secrets & runtime state (NEVER publish) ---
+config.php
+.user.ini
+
+# runtime JSON stores (links may contain tokens / password hashes, stars, trash,
+# transfer stats, activity). Folder structure is kept by data/.htaccess.
+data/*.json
+
+# user-uploaded content
+storage/drive/*
+storage/trashbin/*
+!storage/drive/.keep
+!storage/trashbin/.keep
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.log

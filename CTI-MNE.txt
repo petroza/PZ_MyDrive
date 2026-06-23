@@ -1,0 +1,63 @@
+============================================================
+  MyDrive — osobní cloud (klon prostředí Google Drive)
+============================================================
+
+Co to je
+--------
+Přehledné osobní úložiště ve stylu Google Drive / myDrive,
+postavené na stejném ověřeném PHP základu jako vaše původní
+aplikace (datashare). Funguje na běžném FTP / sdíleném PHP
+hostingu úplně stejně jako datashare — žádný Node.js, žádná
+databáze, žádný Docker.
+
+POZOR: Toto NENÍ doslovný port projektu subnub/myDrive z
+GitHubu. Ten je psaný v Node.js + MongoDB a na běžném PHP
+hostingu (Forpsi apod.) ho rozběhnout nelze, protože potřebuje
+trvale běžící proces a databázi. Tahle aplikace má STEJNÉ
+prostředí a STEJNÉ funkce, ale běží čistě v PHP, takže ji
+nahrajete na FTP a hned jede.
+
+Jak nainstalovat
+----------------
+1) Celou složku nahrajte přes FTP do webového adresáře
+   (např. do kořene domény nebo do podsložky /disk).
+2) Otevřete adresu v prohlížeči. Při prvním spuštění se sám
+   spustí průvodce nastavením (setup.php):
+     - zvolíte přihlašovací jméno a heslo majitele
+     - název webu, adresu (base URL)
+     - velikost úložiště (kvótu) v GB
+   Po dokončení se vytvoří soubor config.php a jste přihlášeni.
+3) Hotovo — přihlásíte se a máte svůj Disk.
+
+Požadavky na hosting
+--------------------
+- PHP 7.4+ nebo 8.x
+- rozšíření: zip, fileinfo, mbstring (běžně bývají zapnuté)
+- zapisovatelný adresář aplikace (kvůli config.php, data/ a
+  storage/) — na FTP standardně je
+
+Funkce
+------
+- Můj disk: procházení souborů a složek (mřížka i seznam)
+- Nahrávání tažením myší (drag & drop) i nahrání celé složky
+- Náhled obrázků a souborů (lightbox s předchozí/další)
+- Stažení jednotlivých souborů i celých složek jako ZIP
+- Přejmenování, přesun, mazání
+- Hvězdičky (oblíbené), pohled „Nedávné"
+- Vyhledávání napříč diskem
+- Koš s obnovením smazaných souborů
+- Ukazatel zaplnění úložiště
+
+Bezpečnost
+----------
+- Ochrana proti průchodu cestou (path traversal)
+- CSRF ochrana u všech akcí
+- Vynucené HTTPS, blokovaný přístup k lib/ data/ storage/
+- Ochrana proti hádání hesla (throttling)
+
+Když budete chtít začít znovu od nuly
+-------------------------------------
+Smažte soubor config.php a otevřete web — průvodce se spustí
+znovu.
+
+============================================================
