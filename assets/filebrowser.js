@@ -698,23 +698,29 @@
     function joinRel(a, b) { return a ? (b ? a + '/' + b : a) : b; }
 
     function setupDrop() {
-      var area = mount.querySelector('#fbArea');
-      if (!area) return;
-      var depth = 0; // enter/leave counter so the highlight doesn't flicker between child elements
+      if (!perms.write) return;
+      // Drive-style: drop files ANYWHERE on the page (not just the list).
+      var ov = document.getElementById('fbDropFull');
+      if (!ov) {
+        ov = document.createElement('div');
+        ov.id = 'fbDropFull';
+        ov.innerHTML = '<div class="fbdf-box"><div class="fbdf-ic">📥</div><b>Pusť soubory pro nahrání</b><div class="small">i celé složky</div></div>';
+        document.body.appendChild(ov);
+      }
+      var depth = 0;
       function hasFiles(e) { var dt = e.dataTransfer; return dt && dt.types && Array.prototype.indexOf.call(dt.types, 'Files') >= 0; }
-      function over(e) { if (dragRel || !hasFiles(e)) return; e.preventDefault(); if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy'; }
-      function enter(e) { if (dragRel || !hasFiles(e)) return; e.preventDefault(); depth++; area.classList.add('over'); }
-      function leave(e) { e.preventDefault(); depth = Math.max(0, depth - 1); if (depth === 0) area.classList.remove('over'); }
-      function onDrop(e) {
-        if (dragRel) return; // internal move drag — handled by folder rows, not upload
-        e.preventDefault(); depth = 0; area.classList.remove('over');
+      function active() { return document.contains(mount) && !dragRel; } // this instance, not an internal move
+      document.addEventListener('dragenter', function (e) { if (!active() || !hasFiles(e)) return; e.preventDefault(); depth++; ov.classList.add('on'); });
+      document.addEventListener('dragover', function (e) { if (!active() || !hasFiles(e)) return; e.preventDefault(); if (e.dataTransfer) e.dataTransfer.dropEffect = 'copy'; });
+      document.addEventListener('dragleave', function (e) { if (!active()) return; depth = Math.max(0, depth - 1); if (depth === 0) ov.classList.remove('on'); });
+      document.addEventListener('drop', function (e) {
+        if (!active()) return;
+        depth = 0; ov.classList.remove('on');
+        if (!hasFiles(e)) return;
+        e.preventDefault();
         var dt = e.dataTransfer; if (!dt) return;
         collectFromDrop(dt).then(function (res) { doUpload(res.dirs, res.items); });
-      }
-      area.addEventListener('dragenter', enter);
-      area.addEventListener('dragover', over);
-      area.addEventListener('dragleave', leave);
-      area.addEventListener('drop', onDrop);
+      });
     }
 
     // Read a dropped tree (files + nested folders) via the Entries API.
@@ -803,7 +809,10 @@
             if (bar) bar.style.width = Math.round(fi / items.length * 100) + '%';
             uploadNext();
           },
-          function (pct, name) { if (txt) txt.textContent = 'Nahrávám ' + name + ' — ' + pct + '% (' + (fi + 1) + '/' + items.length + ')'; });
+          function (pct, name) {
+            if (txt) txt.textContent = 'Nahrávám ' + name + ' — ' + pct + '% (' + (fi + 1) + '/' + items.length + ')';
+            if (bar && items.length) bar.style.width = Math.round((fi + pct / 100) / items.length * 100) + '%';
+          });
       }
       mkNext();
     }

@@ -200,6 +200,12 @@ input:focus,select:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 
 .fb-area{position:relative}
 .fb-drop-ov{position:absolute;inset:0;display:none;align-items:center;justify-content:center;text-align:center;background:rgba(26,115,232,.08);border:2px dashed var(--ac);border-radius:14px;z-index:6;color:var(--ac2);font-weight:700;pointer-events:none;backdrop-filter:blur(1px)}
 .fb-area.over .fb-drop-ov{display:flex}
+#fbDropFull{position:fixed;inset:0;z-index:900;display:none;align-items:center;justify-content:center;background:rgba(26,115,232,.12);backdrop-filter:blur(2px);pointer-events:none}
+#fbDropFull.on{display:flex}
+#fbDropFull .fbdf-box{background:var(--sf);border:2.5px dashed var(--ac);border-radius:18px;padding:2rem 3rem;text-align:center;color:var(--ac2);box-shadow:var(--sh-lg)}
+#fbDropFull .fbdf-ic{font-size:2.6rem}
+#fbDropFull .fbdf-box b{font-size:1.05rem;display:block;margin-top:.35rem;color:var(--tx)}
+#fbDropFull .fbdf-box .small{font-size:.82rem;color:var(--tx2);margin-top:.15rem}
 .prog{height:10px;background:var(--sf3);border-radius:7px;overflow:hidden;margin:.2rem 0 .6rem;display:none;position:relative}
 .prog .bar{height:100%;width:0;background:linear-gradient(90deg,#34c759,#1e9e4a);transition:width .2s;box-shadow:0 0 8px rgba(52,199,89,.4)}
 
