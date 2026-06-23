@@ -88,7 +88,7 @@ function pzc_admin_password_ok(string $password): bool {
 }
 
 function pzc_admin_user_ok(string $user): bool {
-    $u = (string)pzc_cfg('admin_user', 'PetrZ');
+    $u = (string)pzc_cfg('admin_user', 'admin');
     return hash_equals($u, $user);
 }
 

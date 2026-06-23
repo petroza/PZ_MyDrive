@@ -15,7 +15,7 @@ pzc_secure_headers();
 pzc_require_admin_page();
 
 $csrf  = pzc_csrf_token();
-$user  = (string)pzc_cfg('admin_user', 'já');
+$user  = (string)pzc_cfg('admin_user', 'admin');
 $site  = (string)pzc_cfg('site_name', 'MyDrive');
 $st    = md_storage();
 $ini   = strtoupper(mb_substr($user, 0, 1));
